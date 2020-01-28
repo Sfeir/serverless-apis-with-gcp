@@ -38,7 +38,7 @@ gcloud iam service-accounts create esp-sa --display-name='ESP Service Account'
 ```
 gcloud run deploy endpoints-runtime-serverless \
 --image=gcr.io/endpoints-release/endpoints-runtime-serverless:1.44 \
---service-account=esp-sa@$GCP_PROJECT.iam.gserviceaccount.com
+--service-account="esp-sa@$GCP_PROJECT.iam.gserviceaccount.com"
 ```
 Note the generated url looks like this:
 https://endpoints-runtime-serverless-tpkdhd4z7q-uc.a.run.app
@@ -53,5 +53,12 @@ docker push gcr.io/$GCP_PROJECT/hello-devfest
 * Deploy the previously built image to Cloud Run 
 ```
 gcloud run deploy cloud-run-api \
---image=gcr.io/$GCP_PROJECT/hello-devfest
+--image=gcr.io/$GCP_PROJECT/hello-devfest \
+--no-allow-unauthenticated
+```
+* Setup IAM to allow only requests from ESP
+```
+gcloud run services add-iam-policy-binding cloud-run-api \
+--member="serviceAccount:esp-sa@$GCP_PROJECT.iam.gserviceaccount.com" \
+--role="roles/run.invoker"
 ```
