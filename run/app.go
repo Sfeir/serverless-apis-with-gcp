@@ -1,7 +1,9 @@
-package app_inventory
+package main
 
 import (
+	"context"
 	"fmt"
+	"strconv"
 	"log"
 	"net/http"
 	"os"
@@ -10,23 +12,28 @@ import (
 	"google.golang.org/api/iterator"
 )
 
+type Microservice struct {
+	Name        string
+	Year        int64
+}
+
 func handler(w http.ResponseWriter, r *http.Request) {
 	log.Print("Cloud Run app inventory received a request.")
 
 	ctx := context.Background()
-	client, _ := datastore.NewClient(ctx, "my-proj")
+	client, _ := datastore.NewClient(ctx, "serverless-codelab-sandbox")
 
 	// [START datastore_ancestor_query]
 	ancestor := datastore.NameKey("Environment", "Cloud Run", nil)
-
+	query := datastore.NewQuery("Microservice").Ancestor(ancestor)	
+	
+	//var query *datastore.Query
 	params, ok := r.URL.Query()["year"]
 	if ok && len(params[0]) > 1 {
 		log.Println("Url Param 'year' is found")
-		query := datastore.NewQuery("Microservice").Ancestor(ancestor).Filter("year =", params[0])
-	} else {
-		query := datastore.NewQuery("Microservice").Ancestor(ancestor)
-	}
-
+		year, _ := strconv.Atoi(params[0]) 
+   		query = query.Filter("year =", year)
+	} 
 	// [END datastore_ancestor_query]
 
 	it := client.Run(ctx, query)
@@ -41,7 +48,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Fatalf("Error fetching next microservice: %v", err)
 		}
-		result += "<li>" + microservice.name + "(" + microservice.year + ")</li>"
+		result += "<li>" + microservice.Name + " (" + strconv.FormatInt(microservice.Year, 10) + ")</li>"
 	}
 	result += "</ul>"
 

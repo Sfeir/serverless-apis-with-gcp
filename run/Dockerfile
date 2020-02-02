@@ -1,9 +1,11 @@
-FROM golang:1.8-alpine
+FROM golang:1.13-alpine
 
-WORKDIR /go/src/hello-devfest
+# Set the Current Working Directory inside the container
+WORKDIR /go/src/app-inventory
 COPY . .
 
+RUN apk update && apk add --no-cache git
 RUN go get -d -v ./...
 RUN go install -v ./...
 
-CMD ["hello-devfest"]
+CMD ["app-inventory"]
