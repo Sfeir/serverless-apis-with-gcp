@@ -1,0 +1,7 @@
+{
+  "name": "app-inventory",
+  "version": "0.0.1",
+  "dependencies": {
+    "@google-cloud/datastore": "^5.0.4"
+  }
+}
