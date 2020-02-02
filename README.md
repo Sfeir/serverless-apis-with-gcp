@@ -22,6 +22,10 @@ gcloud config set run/platform managed
 gcloud services enable run.googleapis.com
 gcloud services enable cloudfunctions.googleapis.com
 gcloud services enable endpoints.googleapis.com
+
+For datas
+gcloud services enable firebaserules.googleapis.com
+gcloud services enable firestore.googleapis.com
 ```
 * Pin the frequently used products in the codelab
 
