@@ -8,10 +8,10 @@ import (
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-        log.Print("Hello Cloud Night from Cloud Run received a request.")
+        log.Print("Hello Devfest 2020 for Cloud Run received a request.")
         
 	params, ok := r.URL.Query()["name"]
-	name := "World";
+	name := "Devfest 2020";
 	if ok && len(params[0]) > 1 {
         	log.Println("Url Param 'name' is found")
                 name = params[0];
@@ -20,7 +20,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-        log.Print("Hello world sample started.")
+        log.Print("Hello Devfest 2020 for Cloud Run started.")
 
         http.HandleFunc("/", handler)
 
