@@ -33,6 +33,10 @@ gcloud services enable firestore.googleapis.com
 ```
 git clone https://github.com/Sfeir/serverless-apis-with-gcp.git
 ```
+# 0. Init database
+Microservice names generator
+https://project-names.herokuapp.com/names
+
 # 1. Deploy ESP
 * Create the ESP Service Account
 ```
