@@ -33,7 +33,7 @@ gcloud services enable firestore.googleapis.com
 ```
 git clone https://github.com/Sfeir/serverless-apis-with-gcp.git
 ```
-# 0. Init database
+# 1. Init Datastore (NoSql database)
 
 Copy datastore export into your project bucket
 ```
@@ -48,7 +48,7 @@ gcloud datastore import gs://cloud-night-2020.appspot.com/export/export.overall_
 Microservice names generator if you want to add more microservices :)
 https://project-names.herokuapp.com/names
 
-# 1. Deploy ESP
+# 2. Deploy ESP
 * Create the ESP Service Account and give it readonly access
 ```
 gcloud iam service-accounts create esp-sa --display-name='ESP Service Account'
@@ -63,7 +63,7 @@ gcloud run deploy endpoints-runtime-serverless \
 Note the generated url looks like this:
 https://endpoints-runtime-serverless-[random]q-uc.a.run.app
 
-# 2. Deploy Cloud Run API
+# 3. Deploy Cloud Run API
 * Build the image and push it to the container registry
 ```
 cd ~/serverless-apis-with-gcp/run
@@ -92,7 +92,7 @@ https://cloud-run-api-[random]-uc.a.run.app?year=2020
 ```
 
 
-# 2. Deploy Cloud Functions API
+# 4. Deploy Cloud Functions API
 * Deploy the cloud function code using the NodeJs 8 runtime 
 ```
 cd ~/serverless-apis-with-gcp/functions
@@ -112,7 +112,7 @@ gcloud functions add-iam-policy-binding cloud-functions-api \
 --role="roles/cloudfunctions.invoker"
 ```
 
-# 3. Deploy App Engine API
+# 5. Deploy App Engine API
 * Deploy the App Engine code using the Python 3.7 runtime 
 ```
 cd ~/serverless-apis-with-gcp/appengine
@@ -150,7 +150,7 @@ https://[GCP_PROJECT].appspot.com/?year=2019
 https://[GCP_PROJECT].appspot.com/?year=2020
 ```
 
-# 3. Deploy the API Specification to Cloud Endpoints
+# 6. Deploy the API Specification to Cloud Endpoints
 * Update the specification file
 ```
 cd ~/serverless-apis-with-gcp/swagger
