@@ -138,3 +138,18 @@ https://[GCP_PROJECT].appspot.com/?year=2018
 https://[GCP_PROJECT].appspot.com/?year=2019
 https://[GCP_PROJECT].appspot.com/?year=2020
 ```
+
+# 3. Deploy the API Specification to Cloud Endpoints
+* Open the spec file
+```
+cd ~/serverless-apis-with-gcp/swagger
+nano app-inventory-api.yaml
+Replace the following placeholders:
+- ESP_URL : the cloud run service 'endpoints-runtime-serverless' url
+- FUNCTION_URL : the cloud function 'cloud-functions-api' url
+- RUN_URL : the cloud run service 'cloud-run-api' url
+- APP_ENGINE_URL : The App Engine application url
+- Client_ID : 
+  - Burger Menu > APIs & Services > credentials
+  - Under the 'OAuth 2.0 Client IDs' copy the 'client id' of 'IAP-App-Engine-app'
+```
