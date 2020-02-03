@@ -49,7 +49,7 @@ gcloud run deploy endpoints-runtime-serverless \
 --service-account="esp-sa@$GCP_PROJECT.iam.gserviceaccount.com"
 ```
 Note the generated url looks like this:
-https://endpoints-runtime-serverless-tpkdhd4z7q-uc.a.run.app
+https://endpoints-runtime-serverless-[random]q-uc.a.run.app
 
 # 2. Deploy Cloud Run API
 * Build the image and push it to the container registry
@@ -74,9 +74,9 @@ gcloud run services add-iam-policy-binding cloud-run-api \
 Note the Cloud Run generated url looks like:
 ```
 https://cloud-run-api-[random]-uc.a.run.app
-https://cloud-run-api-tpkdhd4z7q-uc.a.run.app?year=2018
-https://cloud-run-api-tpkdhd4z7q-uc.a.run.app?year=2019
-https://cloud-run-api-tpkdhd4z7q-uc.a.run.app?year=2020
+https://cloud-run-api-[random]-uc.a.run.app?year=2018
+https://cloud-run-api-[random]-uc.a.run.app?year=2019
+https://cloud-run-api-[random]-uc.a.run.app?year=2020
 ```
 
 
