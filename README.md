@@ -69,8 +69,10 @@ gcloud run deploy cloud-run-api \
 gcloud run services add-iam-policy-binding cloud-run-api \
 --member="serviceAccount:esp-sa@$GCP_PROJECT.iam.gserviceaccount.com" \
 --role="roles/run.invoker"
+```
 
 Note the Cloud Run generated url looks like:
+```
 https://cloud-run-api-[random]-uc.a.run.app
 https://cloud-run-api-tpkdhd4z7q-uc.a.run.app?year=2018
 https://cloud-run-api-tpkdhd4z7q-uc.a.run.app?year=2019
@@ -89,9 +91,10 @@ gcloud functions deploy cloud-functions-api --runtime=nodejs8 --trigger-http --e
 gcloud functions add-iam-policy-binding cloud-functions-api \
 --member="serviceAccount:esp-sa@$GCP_PROJECT.iam.gserviceaccount.com" \
 --role="roles/cloudfunctions.invoker"
+```
 
 Note the Cloud Function url:
-
+```
 https://us-central1-[GCP_PROJECT].cloudfunctions.net/cloud-functions-api
 https://us-central1-[GCP_PROJECT].cloudfunctions.net/cloud-functions-api?year=2018
 https://us-central1-[GCP_PROJECT].cloudfunctions.net/cloud-functions-api?year=2019
