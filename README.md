@@ -49,7 +49,7 @@ gcloud run deploy endpoints-runtime-serverless \
 --service-account="esp-sa@$GCP_PROJECT.iam.gserviceaccount.com"
 ```
 Note the generated url looks like this:
-https://endpoints-runtime-serverless-tpkdhd4z7q-uc.a.run.app
+https://endpoints-runtime-serverless-[random]q-uc.a.run.app
 
 # 2. Deploy Cloud Run API
 * Build the image and push it to the container registry
@@ -69,4 +69,34 @@ gcloud run deploy cloud-run-api \
 gcloud run services add-iam-policy-binding cloud-run-api \
 --member="serviceAccount:esp-sa@$GCP_PROJECT.iam.gserviceaccount.com" \
 --role="roles/run.invoker"
+```
+
+Note the Cloud Run generated url looks like:
+```
+https://cloud-run-api-[random]-uc.a.run.app
+https://cloud-run-api-[random]-uc.a.run.app?year=2018
+https://cloud-run-api-[random]-uc.a.run.app?year=2019
+https://cloud-run-api-[random]-uc.a.run.app?year=2020
+```
+
+
+# 2. Deploy Cloud Functions API
+* Deploy the cloud function code using the NodeJs 8 runtime 
+```
+cd ~/serverless-apis-with-gcp/functions
+gcloud functions deploy cloud-functions-api --runtime=nodejs8 --trigger-http --entry-point=appInventory
+```
+* Setup IAM to allow only requests from ESP
+```
+gcloud functions add-iam-policy-binding cloud-functions-api \
+--member="serviceAccount:esp-sa@$GCP_PROJECT.iam.gserviceaccount.com" \
+--role="roles/cloudfunctions.invoker"
+```
+
+Note the Cloud Function url:
+```
+https://us-central1-[GCP_PROJECT].cloudfunctions.net/cloud-functions-api
+https://us-central1-[GCP_PROJECT].cloudfunctions.net/cloud-functions-api?year=2018
+https://us-central1-[GCP_PROJECT].cloudfunctions.net/cloud-functions-api?year=2019
+https://us-central1-[GCP_PROJECT].cloudfunctions.net/cloud-functions-api?year=2020
 ```
