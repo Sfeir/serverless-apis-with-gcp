@@ -38,9 +38,10 @@ Microservice names generator
 https://project-names.herokuapp.com/names
 
 # 1. Deploy ESP
-* Create the ESP Service Account
+* Create the ESP Service Account and give it readonly access
 ```
 gcloud iam service-accounts create esp-sa --display-name='ESP Service Account'
+gcloud projects add-iam-policy-binding $GCP_PROJECT --member="serviceAccount:esp-sa@$GCP_PROJECT.iam.gserviceaccount.com" --role="roles/viewer"
 ```
 * Deploy the Extensible Service Proxy Container to Cloud Run with the previously created service account as identity
 ```
@@ -86,19 +87,18 @@ https://cloud-run-api-[random]-uc.a.run.app?year=2020
 cd ~/serverless-apis-with-gcp/functions
 gcloud functions deploy cloud-functions-api --runtime=nodejs8 --trigger-http --entry-point=appInventory
 ```
-* Setup IAM to allow only requests from ESP
-```
-gcloud functions add-iam-policy-binding cloud-functions-api \
---member="serviceAccount:esp-sa@$GCP_PROJECT.iam.gserviceaccount.com" \
---role="roles/cloudfunctions.invoker"
-```
-
-Note the Cloud Function url:
+Note the Cloud Function urls that you can try to verify that everything is OK:
 ```
 https://us-central1-[GCP_PROJECT].cloudfunctions.net/cloud-functions-api
 https://us-central1-[GCP_PROJECT].cloudfunctions.net/cloud-functions-api?year=2018
 https://us-central1-[GCP_PROJECT].cloudfunctions.net/cloud-functions-api?year=2019
 https://us-central1-[GCP_PROJECT].cloudfunctions.net/cloud-functions-api?year=2020
+```
+* Setup IAM to allow only requests from ESP
+```
+gcloud functions add-iam-policy-binding cloud-functions-api \
+--member="serviceAccount:esp-sa@$GCP_PROJECT.iam.gserviceaccount.com" \
+--role="roles/cloudfunctions.invoker"
 ```
 
 # 3. Deploy App Engine API
