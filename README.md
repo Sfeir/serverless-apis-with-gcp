@@ -17,13 +17,12 @@ gcloud config set project $GCP_PROJECT
 gcloud config set project $GCP_PROJECT
 gcloud config set run/platform managed
 ```
-* Enable Cloud Run Api
+* Enable Apis
 ```
 gcloud services enable run.googleapis.com
 gcloud services enable cloudfunctions.googleapis.com
 gcloud services enable endpoints.googleapis.com
 
-For datas
 gcloud services enable firebaserules.googleapis.com
 gcloud services enable firestore.googleapis.com
 ```
