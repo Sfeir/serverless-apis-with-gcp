@@ -14,7 +14,7 @@ paths:
       summary: "Get apps deployed to Cloud Functions"
       operationId: "app-inventory-functions"
       x-google-backend:
-        address: "FUNCTION_URL"
+        address: "CLOUD_FUNCTION_URL"
       parameters:
         - 
           in: query
@@ -31,7 +31,7 @@ paths:
       summary: "Get apps deployed to Cloud Run"
       operationId: "app-inventory-run"
       x-google-backend:
-        address: "RUN_URL"
+        address: "CLOUD_RUN_URL"
       parameters:
         - 
           in: query
