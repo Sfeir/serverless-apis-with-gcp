@@ -34,7 +34,18 @@ gcloud services enable firestore.googleapis.com
 git clone https://github.com/Sfeir/serverless-apis-with-gcp.git
 ```
 # 0. Init database
-Microservice names generator
+
+Copy datastore export into your project bucket
+```
+gsutil cp -r gs://serverless-apis-with-gcp-2020/export  gs://$GCP_PROJECT.appspot.com
+```
+
+Import sample data into your datastore instance
+```
+gcloud datastore import gs://cloud-night-2020.appspot.com/export/export.overall_export_metadata
+```
+
+Microservice names generator if you want to add more microservices :)
 https://project-names.herokuapp.com/names
 
 # 1. Deploy ESP
