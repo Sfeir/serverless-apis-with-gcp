@@ -54,7 +54,7 @@ https://endpoints-runtime-serverless-[random]q-uc.a.run.app
 # 2. Deploy Cloud Run API
 * Build the image and push it to the container registry
 ```
-cd run
+cd ~/serverless-apis-with-gcp/run
 docker build -t gcr.io/$GCP_PROJECT/hello-devfest .
 docker push gcr.io/$GCP_PROJECT/hello-devfest
 ```
@@ -99,4 +99,57 @@ https://us-central1-[GCP_PROJECT].cloudfunctions.net/cloud-functions-api
 https://us-central1-[GCP_PROJECT].cloudfunctions.net/cloud-functions-api?year=2018
 https://us-central1-[GCP_PROJECT].cloudfunctions.net/cloud-functions-api?year=2019
 https://us-central1-[GCP_PROJECT].cloudfunctions.net/cloud-functions-api?year=2020
+```
+
+# 3. Deploy App Engine API
+* Deploy the App Engine code using the Python 3.7 runtime 
+```
+cd ~/serverless-apis-with-gcp/appengine
+gcloud app deploy
+```
+
+* Setup Identity-Aware Proxy (IAP) to allow only requests from ESP
+```
+gcloud services enable iap.googleapis.com
+
+Burger Menu > Security > Identity-Aware Proxy
+Configure Consent Screen
+Choose public
+Optionaly you can upload a logo for the app
+
+Burger Menu > Security > Identity-Aware Proxy
+Turn-on IAP by activating the radio button in the iap column
+Try to access again and this time you will be denied!
+
+Select 'App Engine App'
+Click 'Add Member' button on the right
+- New members : Your Email Address
+- Select a role : Cloud IAP > IAP-secured Web App User
+
+Try to access again (May take a few seconds to take effect) and this time you will be authorized!
+
+Now grant the same access to the ESP service account.
+```
+
+Note the App Engine url:
+```
+https://[GCP_PROJECT].appspot.com/
+https://[GCP_PROJECT].appspot.com/?year=2018
+https://[GCP_PROJECT].appspot.com/?year=2019
+https://[GCP_PROJECT].appspot.com/?year=2020
+```
+
+# 3. Deploy the API Specification to Cloud Endpoints
+* Open the spec file
+```
+cd ~/serverless-apis-with-gcp/swagger
+nano app-inventory-api.yaml
+Replace the following placeholders:
+- ESP_URL : the cloud run service 'endpoints-runtime-serverless' url
+- FUNCTION_URL : the cloud function 'cloud-functions-api' url
+- RUN_URL : the cloud run service 'cloud-run-api' url
+- APP_ENGINE_URL : The App Engine application url
+- Client_ID : 
+  - Burger Menu > APIs & Services > credentials
+  - Under the 'OAuth 2.0 Client IDs' copy the 'client id' of 'IAP-App-Engine-app'
 ```
