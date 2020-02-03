@@ -1,0 +1,68 @@
+swagger: '2.0'
+info:
+  title: "App Inventory - Serverless API in GCP"
+  description: "Sample API on Cloud Endpoints with Google Cloud Serverless compute environments as backends (Cloud Functions, Cloud Run, Appengine Standard)"
+  version: "1.0.0"
+host: "ESP_URL"
+schemes:
+  - "https"
+produces:
+  - "application/json"
+paths:
+  "/functions":
+    get:
+      summary: "Get apps deployed to Cloud Functions"
+      operationId: "app-inventory-functions"
+      x-google-backend:
+        address: "FUNCTION_URL"
+      parameters:
+        - 
+          in: query
+          name: "year"
+          type: integer
+          description: "The year when the app first released"
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: string
+  "/run":
+    get:
+      summary: "Get apps deployed to Cloud Run"
+      operationId: "app-inventory-run"
+      x-google-backend:
+        address: "RUN_URL"
+      parameters:
+        - 
+          in: query
+          name: "year"
+          type: integer
+          description: "The year when the app first released"
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: string
+  "/appengine":
+    get:
+      summary: "Get apps deployed to App Engine"
+      operationId: "app-inventory-appengine"
+      x-google-backend:
+        address: "APP_ENGINE_URL"
+        jwt_audience: Client_ID
+      parameters:
+        - 
+          in: query
+          name: "year"
+          type: integer
+          description: "The year when the app first released"
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: string
+
+
+            
+            
+
