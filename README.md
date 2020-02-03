@@ -128,7 +128,7 @@ Click 'Add Member' button on the right
 
 Try to access again (May take a few seconds to take effect) and this time you will be authorized!
 
-Now grant the same access to the ESP service account.
+Now grant the same access to the ESP service account and remove your account.
 ```
 
 Note the App Engine url:
@@ -157,4 +157,16 @@ Replace the following placeholders:
 * Deploy the specification to Cloud Endpoints
 ```
 gcloud endpoints services deploy app-inventory-api.yaml
+```
+If everything is okay you should get an output similar to this :
+```
+Service Configuration [2020-02-03r0] uploaded for service [endpoints-runtime-serverless-tpkdhd4z7q-uc.a.run.app]
+```
+Note the service name 'endpoints-runtime-serverless-[random]-uc.a.run.app' that we will be using in the next step.
+
+* Update the ESP with the Endpoint service name
+```
+gcloud run services update endpoints-runtime-serverless \
+   --set-env-vars ENDPOINTS_SERVICE_NAME=endpoints-runtime-serverless-[random]-uc.a.run.app \
+   --project $GCP_PROJECT
 ```
