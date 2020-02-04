@@ -180,3 +180,5 @@ gcloud run services update endpoints-runtime-serverless \
    --set-env-vars ENDPOINTS_SERVICE_NAME=endpoints-runtime-serverless-[random]-uc.a.run.app \
    --project $GCP_PROJECT
 ```
+
+# 7. Configuring quotas for the API
