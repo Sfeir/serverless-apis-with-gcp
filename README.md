@@ -181,4 +181,66 @@ gcloud run services update endpoints-runtime-serverless \
    --project $GCP_PROJECT
 ```
 
-# 7. Configuring quotas for the API
+# 8. Restricting API access with API keys
+* Configures basic authentication with an API key by adding this section to the end of the spec file
+```
+security:
+  - api_key: []
+  
+securityDefinitions:
+  api_key:
+    type: "apiKey"
+    name: "key"
+    in: "query"
+```
+* Deploy the updated specification to Cloud Endpoints
+```
+gcloud endpoints services deploy app-inventory-api.yaml
+```
+
+
+# 7. Configuring 
+* Define an api metric 
+```
+x-google-management:
+  metrics:
+    # Define a metric for read requests.
+    - name: "read-requests"
+      displayName: "Read requests"
+      valueType: INT64
+      metricKind: DELTA
+```  
+* Define the metric limit 
+```
+  quota:
+    limits:
+      # Define the limit or the read-requests metric.
+      - name: "read-limit"
+        metric: "read-requests"
+        unit: "1/min/{project}"
+        values:
+          STANDARD: 1000
+``` 
+
+* The final 'x-google-management' section should be :
+```
+x-google-management:
+  metrics:
+    # Define a metric for read requests.
+    - name: "read-requests"
+      displayName: "Read requests"
+      valueType: INT64
+      metricKind: DELTA
+  quota:
+    limits:
+      # Define the limit or the read-requests metric.
+      - name: "read-limit"
+        metric: "read-requests"
+        unit: "1/min/{project}"
+        values:
+          STANDARD: 1000
+```
+* Deploy the updated specification to Cloud Endpoints
+```
+gcloud endpoints services deploy app-inventory-api.yaml
+```
