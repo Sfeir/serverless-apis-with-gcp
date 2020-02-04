@@ -52,6 +52,7 @@ https://project-names.herokuapp.com/names
 ```
 gcloud iam service-accounts create esp-sa --display-name='ESP Service Account'
 gcloud projects add-iam-policy-binding $GCP_PROJECT --member="serviceAccount:esp-sa@$GCP_PROJECT.iam.gserviceaccount.com" --role="roles/viewer"
+gcloud projects add-iam-policy-binding $GCP_PROJECT --member="serviceAccount:esp-sa@$GCP_PROJECT.iam.gserviceaccount.com" --role="roles/servicemanagement.serviceController"
 ```
 * Deploy the Extensible Service Proxy Container to Cloud Run with the previously created service account as identity
 ```
@@ -219,7 +220,7 @@ x-google-management:
         metric: "read-requests"
         unit: "1/min/{project}"
         values:
-          STANDARD: 1000
+          STANDARD: 100
 ``` 
 
 * The final 'x-google-management' section should be :
@@ -238,7 +239,41 @@ x-google-management:
         metric: "read-requests"
         unit: "1/min/{project}"
         values:
-          STANDARD: 1000
+          STANDARD: 100
+```
+
+* Apply the quota by adding 'x-google-quota' to the '/appengine' section in the same level with x-google-backend
+```
+x-google-quota:
+  metricCosts:
+    get_requests: 20
+```
+* The final '/appengine' section should be :
+```
+"/appengine":
+  get:
+    summary: "Get apps deployed to App Engine"
+    operationId: "app-inventory-appengine"
+    x-google-backend:
+      address: "https://serverless-codelab-sandbox.appspot.com"
+      jwt_audience: 671771450352-79a9ihrtgggm309n6n0g5ga64utctlq2.apps.googleusercontent.com
+    x-google-quota:
+      metricCosts:
+        get_requests: 20
+```
+* Verify that the quota is working by calling many times until getting this error (After five tries) :
+```
+{
+ "code": 8,
+ "message": "Quota exceeded for quota metric 'get_requests' and limit 'get-limit' of service 'endpoints-runtime-serverless-tpkdhd4z7q-uc.a.run.app' for consumer 'project_number:671771450352'.",
+ "details": [
+  {
+   "@type": "type.googleapis.com/google.rpc.DebugInfo",
+   "stackEntries": [],
+   "detail": "internal"
+  }
+ ]
+}
 ```
 * Deploy the updated specification to Cloud Endpoints
 ```
