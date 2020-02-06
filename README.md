@@ -14,7 +14,6 @@ gcloud config set project $GCP_PROJECT
 ```
 * Configure default Cloud Run mode (Fully managed mode)
 ```
-gcloud config set project $GCP_PROJECT
 gcloud config set run/platform managed
 ```
 * Enable Apis
@@ -43,9 +42,6 @@ Import sample data into your datastore instance
 ```
 gcloud datastore import gs://cloud-night-2020.appspot.com/export/export.overall_export_metadata
 ```
-
-Microservice names generator if you want to add more microservices :)
-https://project-names.herokuapp.com/names
 
 # 2. Deploy ESP
 * Create the ESP Service Account and give it readonly access
@@ -182,7 +178,7 @@ gcloud run services update endpoints-runtime-serverless \
    --project $GCP_PROJECT
 ```
 
-# 8. Restricting API access with API keys
+# 7. Restricting API access with API keys
 * Configures basic authentication with an API key by adding this section to the end of the spec file
 ```
 security:
@@ -200,7 +196,7 @@ gcloud endpoints services deploy app-inventory-api.yaml
 ```
 
 
-# 7. Configuring 
+# 8. Configuring 
 * Define an api metric 
 ```
 x-google-management:
