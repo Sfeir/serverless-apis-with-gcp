@@ -36,6 +36,7 @@ git clone https://github.com/Sfeir/serverless-apis-with-gcp.git
 Create a new bucket to store the datastore export
 ```
 GCP_BUCKET=[Choose a gloal unique bucket name]
+gsutil mb gs://$GCP_BUCKET
 ```
 
 Copy datastore export into your project bucket
