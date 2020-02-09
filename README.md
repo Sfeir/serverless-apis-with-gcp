@@ -127,7 +127,8 @@ gcloud functions deploy cloud-functions-api \
 --runtime=nodejs8 \
 --trigger-http \
 --entry-point=appInventory \
---region=$REGION
+--region=$REGION \
+--allow-unauthenticated
 ```
 Note the Cloud Function urls that you can try to verify that everything is OK:
 ```
