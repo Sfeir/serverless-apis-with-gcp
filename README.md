@@ -6,7 +6,6 @@ Steps
 * Setup environment variables
 ```
 export GCP_PROJECT=[your-project-id]
-export PORT=9090
 ```
 * Configure context for your project
 ```
