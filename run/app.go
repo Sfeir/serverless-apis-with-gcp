@@ -21,7 +21,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	log.Print("Cloud Run app inventory received a request.")
 
 	ctx := context.Background()
-	client, _ := datastore.NewClient(ctx, "serverless-codelab-sandbox")
+	client, _ := datastore.NewClient(ctx, os.Getenv("PROJECT_ID"))
 
 	// [START datastore_ancestor_query]
 	ancestor := datastore.NameKey("Environment", "Cloud Run", nil)
