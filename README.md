@@ -11,10 +11,16 @@ export REGION=europe-west1
 * Configure context for your project
 ```
 gcloud config set project $GCP_PROJECT
+gcloud config set compute/region $REGION
 ```
 * Configure default Cloud Run mode (Fully managed mode)
 ```
 gcloud config set run/platform managed
+```
+* Configure default Cloud Run and Functons deploy default region
+```
+gcloud config set run/region $REGION
+gcloud config set functions/region $REGION
 ```
 * Enable Apis
 ```
@@ -24,13 +30,18 @@ gcloud services enable endpoints.googleapis.com
 
 gcloud services enable firebaserules.googleapis.com
 gcloud services enable firestore.googleapis.com
+
+gcloud services enable iap.googleapis.com
 ```
 * Pin the frequently used products in the codelab
     - Cloud Run
     - Cloud Functions
     - App Engine
     - Endpoints
-  
+    - Datastore
+    - Storage
+    - Container Registry
+    
 # 1. Init Datastore (NoSql database)
 * Create a new App Engine app : this will automatiquely create : 
     - Datastore instance
@@ -65,11 +76,10 @@ gcloud projects add-iam-policy-binding $GCP_PROJECT --member="serviceAccount:esp
 gcloud run deploy endpoints-runtime-serverless \
 --image=gcr.io/endpoints-release/endpoints-runtime-serverless:1.44 \
 --service-account="esp-sa@$GCP_PROJECT.iam.gserviceaccount.com" \
---region=$REGION \
 --allow-unauthenticated
 ```
 Note the generated url looks like this:
-https://endpoints-runtime-serverless-[random]q-uc.a.run.app
+https://endpoints-runtime-serverless-[random]q-ew.a.run.app
 
 # 3. Deploy Cloud Run API
 * Clone Github Repository
@@ -101,22 +111,26 @@ docker push gcr.io/$GCP_PROJECT/app-inventory
 gcloud run deploy cloud-run-api \
 --image=gcr.io/$GCP_PROJECT/app-inventory \
 --allow-unauthenticated \
---region=$REGION \
 --set-env-vars PROJECT_ID=$GCP_PROJECT
 ```
-* Setup IAM to allow only requests from ESP
+Note the Cloud Run generated url looks like:
+```
+https://cloud-run-api-[random]-ew.a.run.app
+https://cloud-run-api-[random]-ew.a.run.app?year=2018
+https://cloud-run-api-[random]-ew.a.run.app?year=2019
+https://cloud-run-api-[random]-ew.a.run.app?year=2020
+```
+* Remove public access to the Cloud Run API
+```
+gcloud run services remove-iam-policy-binding cloud-run-api \
+--member="allUsers" \
+--role="roles/run.invoker"
+```
+* Setup IAM Policy to allow only requests from ESP
 ```
 gcloud run services add-iam-policy-binding cloud-run-api \
 --member="serviceAccount:esp-sa@$GCP_PROJECT.iam.gserviceaccount.com" \
 --role="roles/run.invoker"
-```
-
-Note the Cloud Run generated url looks like:
-```
-https://cloud-run-api-[random]-uc.a.run.app
-https://cloud-run-api-[random]-uc.a.run.app?year=2018
-https://cloud-run-api-[random]-uc.a.run.app?year=2019
-https://cloud-run-api-[random]-uc.a.run.app?year=2020
 ```
 
 # 4. Deploy Cloud Functions API
@@ -127,15 +141,20 @@ gcloud functions deploy cloud-functions-api \
 --runtime=nodejs8 \
 --trigger-http \
 --entry-point=appInventory \
---region=$REGION \
 --allow-unauthenticated
 ```
 Note the Cloud Function urls that you can try to verify that everything is OK:
 ```
-https://us-central1-[GCP_PROJECT].cloudfunctions.net/cloud-functions-api
-https://us-central1-[GCP_PROJECT].cloudfunctions.net/cloud-functions-api?year=2018
-https://us-central1-[GCP_PROJECT].cloudfunctions.net/cloud-functions-api?year=2019
-https://us-central1-[GCP_PROJECT].cloudfunctions.net/cloud-functions-api?year=2020
+https://europe-west1-[GCP_PROJECT].cloudfunctions.net/cloud-functions-api
+https://europe-west1-[GCP_PROJECT].cloudfunctions.net/cloud-functions-api?year=2018
+https://europe-west1-[GCP_PROJECT].cloudfunctions.net/cloud-functions-api?year=2019
+https://europe-west1-[GCP_PROJECT].cloudfunctions.net/cloud-functions-api?year=2020
+```
+* Remove public access to the Cloud Run API
+```
+gcloud functions remove-iam-policy-binding cloud-functions-api \
+--member="allUsers" \
+--role="roles/cloudfunctions.invoker"
 ```
 * Setup IAM to allow only requests from ESP
 ```
@@ -150,15 +169,22 @@ gcloud functions add-iam-policy-binding cloud-functions-api \
 cd ~/serverless-apis-with-gcp/appengine
 gcloud app deploy
 ```
+Note the App Engine url:
+```
+https://[GCP_PROJECT].appspot.com/
+https://[GCP_PROJECT].appspot.com/?year=2018
+https://[GCP_PROJECT].appspot.com/?year=2019
+https://[GCP_PROJECT].appspot.com/?year=2020
+```
 
 * Setup Identity-Aware Proxy (IAP) to allow only requests from ESP
 ```
-gcloud services enable iap.googleapis.com
-
 Burger Menu > Security > Identity-Aware Proxy
 Configure Consent Screen
-Choose public
-Optionaly you can upload a logo for the app
+> Choose external
+> Choose public
+> Application name --> Application Inventory
+> Optionaly you can upload a logo for the app
 
 Burger Menu > Security > Identity-Aware Proxy
 Turn-on IAP by activating the radio button in the iap column
@@ -205,13 +231,22 @@ If everything is okay you should get an output similar to this :
 ```
 Service Configuration [2020-02-03r0] uploaded for service [endpoints-runtime-serverless-tpkdhd4z7q-uc.a.run.app]
 ```
-Note the service name 'endpoints-runtime-serverless-[random]-uc.a.run.app' that we will be using in the next step.
+Save the service name 'endpoints-runtime-serverless-[random]-ew.a.run.app' that we will be using in the next step.
+```
+export ENDPOINT_SERVICE_NAME=endpoints-runtime-serverless-[random]-uc.a.run.app
+```
 
 * Update the ESP with the Endpoint service name
 ```
 gcloud run services update endpoints-runtime-serverless \
-   --set-env-vars ENDPOINTS_SERVICE_NAME=endpoints-runtime-serverless-[random]-uc.a.run.app \
+   --set-env-vars ENDPOINTS_SERVICE_NAME=$ENDPOINT_SERVICE_NAME \
    --project $GCP_PROJECT
+```
+* Test access to the different versions of API using the ESP runtime URL
+```
+https://endpoints-runtime-serverless-[random]-ew.a.run.app/run
+https://endpoints-runtime-serverless-[random]-ew.a.run.app/functions
+https://endpoints-runtime-serverless-[random]-ew.a.run.app/appengine
 ```
 
 # 7. Restricting API access with API keys
@@ -230,7 +265,28 @@ securityDefinitions:
 ```
 gcloud endpoints services deploy app-inventory-api.yaml
 ```
-
+* Try again to access the API and you should get this error
+```
+{
+ "code": 16,
+ "message": "Method doesn't allow unregistered callers (callers without established identity). Please use API Key or other form of API consumer identity to call this API.",
+ "details": [
+  {
+   "@type": "type.googleapis.com/google.rpc.DebugInfo",
+   "stackEntries": [],
+   "detail": "service_control"
+  }
+ ]
+}
+```
+* Create an API key for your project
+```
+Burger Menu > APIs & Services > credentials
+> + CREATE CREDENTIALS
+> Select 'API Key'
+> Copy The generated 'API Key' in order to use it in the url
+https://endpoints-runtime-serverless-[random]-ew.a.run.app/run?key=[API Key]
+```
 
 # 8. Configuring 
 * Define an api metric 
@@ -266,7 +322,7 @@ x-google-management:
       metricKind: DELTA
   quota:
     limits:
-      # Define the limit or the read-requests metric.
+      # Define the limit on the read-requests metric.
       - name: "read-limit"
         metric: "read-requests"
         unit: "1/min/{project}"
@@ -278,7 +334,7 @@ x-google-management:
 ```
 x-google-quota:
   metricCosts:
-    get_requests: 20
+    read-requests: 20
 ```
 * The final '/appengine' section should be :
 ```
@@ -291,7 +347,11 @@ x-google-quota:
       jwt_audience: 671771450352-79a9ihrtgggm309n6n0g5ga64utctlq2.apps.googleusercontent.com
     x-google-quota:
       metricCosts:
-        get_requests: 20
+        read-requests: 20
+```
+* Deploy the updated specification to Cloud Endpoints
+```
+gcloud endpoints services deploy app-inventory-api.yaml
 ```
 * Verify that the quota is working by calling many times until getting this error (After five tries) :
 ```
@@ -306,8 +366,4 @@ x-google-quota:
   }
  ]
 }
-```
-* Deploy the updated specification to Cloud Endpoints
-```
-gcloud endpoints services deploy app-inventory-api.yaml
 ```
