@@ -100,7 +100,9 @@ docker push gcr.io/$GCP_PROJECT/app-inventory
 ```
 gcloud run deploy cloud-run-api \
 --image=gcr.io/$GCP_PROJECT/app-inventory \
---allow-unauthenticated
+--allow-unauthenticated \
+--region=$REGION \
+--set-env-vars PROJECT_ID=$GCP_PROJECT
 ```
 * Setup IAM to allow only requests from ESP
 ```
