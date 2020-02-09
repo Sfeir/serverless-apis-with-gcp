@@ -6,6 +6,7 @@ Steps
 * Setup environment variables
 ```
 export GCP_PROJECT=[your-project-id]
+export REGION=europe-west1
 ```
 * Configure context for your project
 ```
@@ -25,19 +26,21 @@ gcloud services enable firebaserules.googleapis.com
 gcloud services enable firestore.googleapis.com
 ```
 * Pin the frequently used products in the codelab
-
-* Clone Github Repository
-```
-git clone https://github.com/Sfeir/serverless-apis-with-gcp.git
-```
+    - Cloud Run
+    - Cloud Functions
+    - App Engine
+    - Endpoints
+  
 # 1. Init Datastore (NoSql database)
-Create a new bucket to store the datastore export
+* Create a new App Engine app : this will automatiquely create : 
+    - Datastore instance
+    - Two buckets ($GCP_PROJECT.appspot.com and staging.$GCP_PROJECT.appspot.com) --> we will be using the first one
 ```
-GCP_BUCKET=[Choose a gloal unique bucket name]
-gsutil mb gs://$GCP_BUCKET
-```
+gcloud app create --region=europe-west
 
-Copy datastore export into your project bucket
+export GCP_BUCKET=$GCP_PROJECT.appspot.com
+```
+* Copy an existing datastore export into your project bucket
 ```
 gsutil cp -r gs://serverless-apis-with-gcp-2020/export  gs://$GCP_BUCKET
 ```
@@ -48,9 +51,12 @@ gcloud datastore import gs://$GCP_BUCKET/export/export.overall_export_metadata
 ```
 
 # 2. Deploy ESP
-* Create the ESP Service Account and give it readonly access
+* Create the ESP Service Account
 ```
 gcloud iam service-accounts create esp-sa --display-name='ESP Service Account'
+```
+* Add the required IAM roles the ESP Service Account
+```
 gcloud projects add-iam-policy-binding $GCP_PROJECT --member="serviceAccount:esp-sa@$GCP_PROJECT.iam.gserviceaccount.com" --role="roles/viewer"
 gcloud projects add-iam-policy-binding $GCP_PROJECT --member="serviceAccount:esp-sa@$GCP_PROJECT.iam.gserviceaccount.com" --role="roles/servicemanagement.serviceController"
 ```
@@ -58,23 +64,43 @@ gcloud projects add-iam-policy-binding $GCP_PROJECT --member="serviceAccount:esp
 ```
 gcloud run deploy endpoints-runtime-serverless \
 --image=gcr.io/endpoints-release/endpoints-runtime-serverless:1.44 \
---service-account="esp-sa@$GCP_PROJECT.iam.gserviceaccount.com"
+--service-account="esp-sa@$GCP_PROJECT.iam.gserviceaccount.com" \
+--region=$REGION \
+--allow-unauthenticated
 ```
 Note the generated url looks like this:
 https://endpoints-runtime-serverless-[random]q-uc.a.run.app
 
 # 3. Deploy Cloud Run API
+* Clone Github Repository
+```
+git clone https://github.com/Sfeir/serverless-apis-with-gcp.git
+```
+* Explore the application file app.go and the associated docker file
+```
+cat app.go
+cat Dockerfile
+```
 * Build the image and push it to the container registry
 ```
 cd ~/serverless-apis-with-gcp/run
-docker build -t gcr.io/$GCP_PROJECT/hello-devfest .
-docker push gcr.io/$GCP_PROJECT/hello-devfest
+docker build -t gcr.io/$GCP_PROJECT/app-inventory .
+docker push gcr.io/$GCP_PROJECT/app-inventory
+```
+* Check that the image is stored to GCR
+TOOLS > Container Registry > Images 
+* (Optional) Enable Vulnerability Scanning
+TOOLS > Container Registry > Images 
+Click on the blue button 'Enable Vulnerability scanning'
+You should re-push the image to run the scanning
+```
+docker push gcr.io/$GCP_PROJECT/app-inventory
 ```
 * Deploy the previously built image to Cloud Run 
 ```
 gcloud run deploy cloud-run-api \
---image=gcr.io/$GCP_PROJECT/hello-devfest \
---no-allow-unauthenticated
+--image=gcr.io/$GCP_PROJECT/app-inventory \
+--allow-unauthenticated
 ```
 * Setup IAM to allow only requests from ESP
 ```
@@ -90,7 +116,6 @@ https://cloud-run-api-[random]-uc.a.run.app?year=2018
 https://cloud-run-api-[random]-uc.a.run.app?year=2019
 https://cloud-run-api-[random]-uc.a.run.app?year=2020
 ```
-
 
 # 4. Deploy Cloud Functions API
 * Deploy the cloud function code using the NodeJs 8 runtime 
