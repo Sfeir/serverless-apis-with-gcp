@@ -123,7 +123,11 @@ https://cloud-run-api-[random]-uc.a.run.app?year=2020
 * Deploy the cloud function code using the NodeJs 8 runtime 
 ```
 cd ~/serverless-apis-with-gcp/functions
-gcloud functions deploy cloud-functions-api --runtime=nodejs8 --trigger-http --entry-point=appInventory
+gcloud functions deploy cloud-functions-api \
+--runtime=nodejs8 \
+--trigger-http \
+--entry-point=appInventory \
+--region=$REGION
 ```
 Note the Cloud Function urls that you can try to verify that everything is OK:
 ```
