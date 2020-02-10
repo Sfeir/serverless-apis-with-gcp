@@ -224,7 +224,7 @@ Replace the following placeholders:
   - Under the 'OAuth 2.0 Client IDs' copy the 'client id' of 'IAP-App-Engine-app'
   - Close the popup
 
-(to save the faile in nano use CTRL O, to quit CTRL X)
+(to save the file in nano use CTRL O, to quit CTRL X)
 ```
 
 * Deploy the specification to Cloud Endpoints
