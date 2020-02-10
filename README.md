@@ -88,12 +88,12 @@ git clone https://github.com/Sfeir/serverless-apis-with-gcp.git
 ```
 * Explore the application file app.go and the associated docker file
 ```
+cd ~/serverless-apis-with-gcp/run
 cat app.go
 cat Dockerfile
 ```
 * Build the image and push it to the container registry
 ```
-cd ~/serverless-apis-with-gcp/run
 docker build -t gcr.io/$GCP_PROJECT/app-inventory .
 docker push gcr.io/$GCP_PROJECT/app-inventory
 ```
@@ -185,6 +185,7 @@ Configure Consent Screen
 > Choose public
 > Application name --> Application Inventory
 > Optionaly you can upload a logo for the app
+> Save your changes
 
 Burger Menu > Security > Identity-Aware Proxy
 Turn-on IAP by activating the radio button in the iap column
@@ -221,6 +222,9 @@ Replace the following placeholders:
 - Client_ID : 
   - Burger Menu > APIs & Services > credentials
   - Under the 'OAuth 2.0 Client IDs' copy the 'client id' of 'IAP-App-Engine-app'
+  - Close the popup
+
+(to save the faile in nano use CTRL O, to quit CTRL X)
 ```
 
 * Deploy the specification to Cloud Endpoints
