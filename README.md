@@ -43,12 +43,10 @@ gcloud services enable iap.googleapis.com
     - Container Registry
     
 # 1. Init Datastore (NoSql database)
-* Create a new App Engine app : this will automatiquely create : 
+* As App Engine has been activated, this has automatiquely created : 
     - Datastore instance
     - Two buckets ($GCP_PROJECT.appspot.com and staging.$GCP_PROJECT.appspot.com) --> we will be using the first one
 ```
-gcloud app create --region=europe-west
-
 export GCP_BUCKET=$GCP_PROJECT.appspot.com
 ```
 * Copy an existing datastore export into your project bucket
@@ -222,7 +220,6 @@ Replace the following placeholders:
 - Client_ID : 
   - Burger Menu > APIs & Services > credentials
   - Under the 'OAuth 2.0 Client IDs' copy the 'client id' of 'IAP-App-Engine-app'
-  - Close the popup
 
 (to save the file in nano use CTRL O, to quit CTRL X)
 ```
@@ -290,6 +287,7 @@ Burger Menu > APIs & Services > credentials
 > Select 'API Key'
 > Copy The generated 'API Key' in order to use it in the url
 https://endpoints-runtime-serverless-[random]-ew.a.run.app/run?key=[API Key]
+> Close the popup
 ```
 
 # 8. Configuring 
