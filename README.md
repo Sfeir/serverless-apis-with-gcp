@@ -32,6 +32,8 @@ gcloud services enable firebaserules.googleapis.com
 gcloud services enable firestore.googleapis.com
 
 gcloud services enable iap.googleapis.com
+
+gcloud services enable cloudbuild.googleapis.com
 ```
 * Pin the frequently used products in the codelab
     - Cloud Run
@@ -92,8 +94,7 @@ cat Dockerfile
 ```
 * Build the image and push it to the container registry
 ```
-docker build -t gcr.io/$GCP_PROJECT/app-inventory .
-docker push gcr.io/$GCP_PROJECT/app-inventory
+gcloud builds submit -t gcr.io/$GCP_PROJECT/app-inventory .
 ```
 * Check that the image is stored to GCR
 TOOLS > Container Registry > Images 
