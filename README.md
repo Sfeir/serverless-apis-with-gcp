@@ -98,7 +98,7 @@ docker push gcr.io/$GCP_PROJECT/app-inventory
 * Check that the image is stored to GCR
 TOOLS > Container Registry > Images 
 * (Optional) Enable Vulnerability Scanning
-TOOLS > Container Registry > Images 
+TOOLS > Container Registry > Settings 
 Click on the blue button 'Enable Vulnerability scanning'
 You should re-push the image to run the scanning
 ```
@@ -345,7 +345,7 @@ x-google-quota:
     summary: "Get apps deployed to App Engine"
     operationId: "app-inventory-appengine"
     x-google-backend:
-      address: "https://serverless-codelab-sandbox.appspot.com"
+      address: "https://codelab-project-XX-20200214.appspot.com"
       jwt_audience: 671771450352-79a9ihrtgggm309n6n0g5ga64utctlq2.apps.googleusercontent.com
     x-google-quota:
       metricCosts:
@@ -369,3 +369,7 @@ gcloud endpoints services deploy app-inventory-api.yaml
  ]
 }
 ```
+# 9. Generate a Developer portal
+- Burger Menu > Endpoints > Developer Portal
+- Click on the blue button "Create portal" to generate a portal for the APIs in your project (this will take 5 to 10 minutes)
+- When it's ready please visit https://endpointsportal.codelab-project-XX-20200214.cloud.goog/
