@@ -151,7 +151,7 @@ https://europe-west1-[GCP_PROJECT].cloudfunctions.net/cloud-functions-api?year=2
 https://europe-west1-[GCP_PROJECT].cloudfunctions.net/cloud-functions-api?year=2019
 https://europe-west1-[GCP_PROJECT].cloudfunctions.net/cloud-functions-api?year=2020
 ```
-* Remove public access to the Cloud Run API
+* Remove public access to the Cloud Functions API
 ```
 gcloud functions remove-iam-policy-binding cloud-functions-api \
 --member="allUsers" \
