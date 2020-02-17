@@ -1,6 +1,9 @@
 # serverless-apis-with-gcp
 Build a fully serverless APIs with Google Cloud Platform
 
+Devfest Paris 2020 presentation
+https://docs.google.com/presentation/d/1cArhRnq9Q_YB2g-_-OGav5iP-TVv4d1BJtgRCBQAtf0
+
 Steps
 * Open Cloud Shell
 * Setup environment variables
