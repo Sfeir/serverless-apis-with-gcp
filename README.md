@@ -27,16 +27,13 @@ gcloud config set functions/region $REGION
 ```
 * Enable Apis
 ```
-gcloud services enable run.googleapis.com
-gcloud services enable cloudfunctions.googleapis.com
-gcloud services enable endpoints.googleapis.com
-
-gcloud services enable firebaserules.googleapis.com
-gcloud services enable firestore.googleapis.com
-
-gcloud services enable iap.googleapis.com
-
-gcloud services enable cloudbuild.googleapis.com
+gcloud services enable run.googleapis.com \
+    cloudfunctions.googleapis.com \
+    endpoints.googleapis.com \
+    firebaserules.googleapis.com \
+    firestore.googleapis.com \
+    iap.googleapis.com \
+    cloudbuild.googleapis.com
 ```
 * Pin the frequently used products in the codelab
     - Cloud Run
